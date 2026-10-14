@@ -181,8 +181,14 @@ The library also has `HapticPoseMapping` ([haptic_pose_mapping.hpp](include/hapt
 without ROS): it sets the **desired pose** of an end effector (position and orientation) with the pose of the device
 and its clutch, as seen from a reference camera.
 
-The device frame $`\mathcal{F}_H`$ has $`x`$ to the right, $`y`$ up, and $`z`$ towards the user. A CoppeliaSim camera looks
-along its $`+z`$ axis with $`+y`$ up (its $`+x`$ points to the left of the image), so the camera rotated by
-$`\boldsymbol{r}_{\text{off}}`$, 180° about $`y`$, has the axes of $`\mathcal{F}_H`$ as seen by the user in front of the
-image.
+The device frame $`\mathcal{F}_H`$ has $`x`$ to the right, $`y`$ up, and $`z`$ towards the user. The camera rotated by
+$`\boldsymbol{r}_{\text{off}}`$ has the axes of $`\mathcal{F}_H`$ as seen by the user in front of the image.
+$`\boldsymbol{r}_{\text{off}}`$ depends on the convention of the camera frame of the simulator, and it is the second
+argument of the constructor (`camera_to_device_rotation`, a unit quaternion):
+
+| Camera frame | $`\boldsymbol{r}_{\text{off}}`$ |
+|---|---|
+| CoppeliaSim: looks along $`+z`$, $`+y`$ up ($`+x`$ to the left of the image) | $`\hat{\jmath}`$, 180° about $`y`$ (the default, `coppeliasim_camera_to_device_rotation()`) |
+| ROS optical frame: looks along $`+z`$, $`+y`$ down ($`+x`$ to the right) | $`\hat{\imath}`$, 180° about $`x`$ |
+| ROS body frame: looks along $`+x`$, $`+y`$ to the left, $`+z`$ up | $`\tfrac{1}{2}(1 + \hat{\imath} - \hat{\jmath} - \hat{k})`$, 120° about $`(\hat{\imath} - \hat{\jmath} - \hat{k})/\sqrt{3}`$ |
 

@@ -48,17 +48,24 @@ DQ _unit(const DQ& x, const std::string& name)
 
 }
 
-HapticPoseMapping::HapticPoseMapping(const double& max_translation):
-    max_translation_(max_translation)
+HapticPoseMapping::HapticPoseMapping(const double& max_translation, const DQ& camera_to_device_rotation):
+    max_translation_(max_translation),
+    camera_to_device_rotation_(to_unit_quaternion(camera_to_device_rotation,
+                                                  "HapticPoseMapping: camera_to_device_rotation"))
 {
     if (!std::isfinite(max_translation_))
         throw std::invalid_argument("HapticPoseMapping: max_translation must be finite.");
 }
 
-DQ HapticPoseMapping::camera_to_device_rotation()
+DQ HapticPoseMapping::coppeliasim_camera_to_device_rotation()
 {
     // cos(phi/2) + j_*sin(phi/2), phi = pi: 180 deg about y.
     return cos(M_PI/2.0) + j_*sin(M_PI/2.0);
+}
+
+DQ HapticPoseMapping::get_camera_to_device_rotation() const
+{
+    return camera_to_device_rotation_;
 }
 
 void HapticPoseMapping::engage(const DQ& device_pose, const DQ& end_effector_pose, const DQ& camera_pose,
@@ -69,7 +76,7 @@ void HapticPoseMapping::engage(const DQ& device_pose, const DQ& end_effector_pos
                                     + std::to_string(motion_scaling) + ".");
     x_h1_ = _unit(device_pose, "the pose of the device");
     x_e1_ = _unit(end_effector_pose, "the pose of the end effector");
-    const DQ r_ref = normalize(_unit(camera_pose, "the pose of the camera").rotation()*camera_to_device_rotation());
+    const DQ r_ref = normalize(_unit(camera_pose, "the pose of the camera").rotation()*camera_to_device_rotation_);
     const DQ t_e1 = x_e1_.translation();
     x_ref_ = r_ref + 0.5*E_*t_e1*r_ref;
     motion_scaling_ = motion_scaling;

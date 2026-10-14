@@ -125,7 +125,7 @@ TEST(HapticPoseMapping, TranslationInTheFrameOfAnyCamera)
     mapping.engage(kDevice, kEndEffector, kCamera, s);
     const DQ p_delta = point(0.01, -0.03, 0.02);
     const DQ moved = pose(kDevice.rotation(), kDevice.translation() + p_delta);
-    const DQ r_ref = kCamera.rotation()*HapticPoseMapping::camera_to_device_rotation();
+    const DQ r_ref = kCamera.rotation()*HapticPoseMapping::coppeliasim_camera_to_device_rotation();
     expect_same_point(mapping.desired_pose(moved).translation(),
                       kEndEffector.translation() + Ad(r_ref, s*p_delta));
     // The orientation does not change with a translation of the device.
@@ -178,7 +178,7 @@ TEST(HapticPoseMapping, FullPose)
     const DQ r_delta = normalize(rotation(i_, 0.3)*rotation(k_, -0.2));
     const DQ p_delta = point(-0.01, 0.015, 0.004);
     const DQ moved = pose(normalize(r_delta*kDevice.rotation()), kDevice.translation() + p_delta);
-    const DQ r_ref = normalize(kCamera.rotation()*HapticPoseMapping::camera_to_device_rotation());
+    const DQ r_ref = normalize(kCamera.rotation()*HapticPoseMapping::coppeliasim_camera_to_device_rotation());
     const DQ xd = mapping.desired_pose(moved);
     expect_same_point(xd.translation(), kEndEffector.translation() + Ad(r_ref, s*p_delta));
     expect_same_pose(xd.rotation(), normalize(r_ref*r_delta*r_ref.conj()*kEndEffector.rotation()));
@@ -205,6 +205,43 @@ TEST(HapticPoseMapping, Disengage)
     EXPECT_THROW(mapping.desired_pose(kDevice), std::runtime_error);
 }
 
+TEST(HapticPoseMapping, CameraConventionsOfOtherSimulators)
+{
+    // For each convention of the camera frame (see the class description), with the camera at the identity: moving
+    // the stylus to the right (+x of the device), up (+y), and towards the user (+z) moves the end effector to the
+    // right in the image, up, and towards the camera.
+    struct Convention { const char* name; DQ r_offset; DQ right; DQ up; DQ towards_the_camera; };
+    const Convention conventions[] = {
+        {"CoppeliaSim (looks along +z, +y up)", j_, -1.0*i_, j_, -1.0*k_},
+        {"ROS optical (looks along +z, +y down)", i_, i_, -1.0*j_, -1.0*k_},
+        {"ROS body (looks along +x, z up)", 0.5*(1.0 + i_ - j_ - k_), -1.0*j_, k_, -1.0*i_},
+    };
+    const double d = 0.01;
+    for (const Convention& c : conventions)
+    {
+        SCOPED_TRACE(c.name);
+        HapticPoseMapping mapping(0.0, c.r_offset);
+        expect_same_pose(mapping.get_camera_to_device_rotation(), c.r_offset);
+        const DQ device_motion[3] = {point(d, 0, 0), point(0, d, 0), point(0, 0, d)};
+        const DQ expected[3] = {d*c.right, d*c.up, d*c.towards_the_camera};
+        for (int n = 0; n < 3; n++)
+        {
+            mapping.engage(kDevice, kEndEffector, DQ(1), 1.0);
+            const DQ moved = pose(kDevice.rotation(), kDevice.translation() + device_motion[n]);
+            expect_same_point(mapping.desired_pose(moved).translation() - kEndEffector.translation(), expected[n]);
+        }
+    }
+}
+
+TEST(HapticPoseMapping, TheDefaultCameraIsCoppeliaSim)
+{
+    expect_same_pose(HapticPoseMapping().get_camera_to_device_rotation(), j_);
+    expect_same_pose(HapticPoseMapping::coppeliasim_camera_to_device_rotation(), j_);
+    // A rotation with rounding errors (e.g. from a YAML file) is normalized.
+    expect_same_pose(HapticPoseMapping(0.0, DQ(0.0, 0.70710678, -0.70710678, 0.0)).get_camera_to_device_rotation(),
+                     normalize(i_ - j_));
+}
+
 TEST(HapticPoseMapping, InvalidArguments)
 {
     HapticPoseMapping mapping;
@@ -216,6 +253,8 @@ TEST(HapticPoseMapping, InvalidArguments)
     EXPECT_THROW(mapping.engage(kDevice, DQ(0), kCamera, 1.0), std::invalid_argument);
     EXPECT_FALSE(mapping.is_engaged());
     EXPECT_THROW(HapticPoseMapping(std::nan("")), std::invalid_argument);
+    EXPECT_THROW(HapticPoseMapping(0.0, DQ(0.0, 0.7, -0.7, 0.0)), std::invalid_argument);   // not unit
+    EXPECT_THROW(HapticPoseMapping(0.0, 1.0 + 0.5*E_*i_), std::invalid_argument);              // not a rotation
 
     // A pose with rounding errors (e.g. a quaternion sent in single precision) is accepted, and normalized.
     mapping.engage((1.0 + 1e-5)*kDevice, kEndEffector, kCamera, 1.0);

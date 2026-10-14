@@ -46,8 +46,16 @@ namespace haptic_tools
  * The pose of the device is the pose of the stylus of the haptic device (e.g. the Touch X), expressed in the base
  * frame of the device F_H, as reported by the device: e.g. the pose of sas_msgs/InformationFromMaster, from
  * sas_operator_side_receiver or haptic_simulator. It is not scaled (the motion scaling s is applied here), and it is
- * not expressed in the frame of the robot or of the world. F_H has x to the right, y up, and z towards the user. A
- * CoppeliaSim camera looks along +z with +y up, so r_offset (180 deg about y) gives it the axes of F_H.
+ * not expressed in the frame of the robot or of the world. F_H has x to the right, y up, and z towards the user.
+ *
+ * r_offset (camera_to_device_rotation) is the rotation, relative to the camera frame, of a frame with the axes of F_H
+ * as seen by the user in front of the image. It depends on the convention of the camera frame of the simulator:
+ * @verbatim
+   Camera frame                                       r_offset
+   CoppeliaSim: looks along +z, +y up (+x left)       j_                    180 deg about y (the default)
+   ROS optical: looks along +z, +y down (+x right)    i_                    180 deg about x
+   ROS body: x forward (looks along +x), y left, z up 0.5*(1 + i_ - j_ - k_) 120 deg about (i_ - j_ - k_)/sqrt(3)
+   @endverbatim
  *
  * At the press, with x_h1 the pose of the device, x_e1 the pose of the end effector, r_c1 the rotation of the camera,
  * and s the motion scaling:
@@ -74,6 +82,7 @@ private:
     DQ_robotics::DQ x_ref_{1};     ///< Frame with the axes of the camera, at the end effector, at the press.
     double motion_scaling_{1.0};   ///< Motion scaling s, at the press.
     double max_translation_{0.0};  ///< Maximum ||p_delta|| (m); non-positive: no limit.
+    DQ_robotics::DQ camera_to_device_rotation_;   ///< r_offset.
 
 public:
     /**
@@ -82,15 +91,27 @@ public:
      *        scaled displacement of the stylus, p_delta = s*(p_h - p_h1), is cut to this length, keeping its
      *        direction (e.g. 0.5: with s = 10, moving the stylus 10 cm moves x_d 0.5 m, not 1 m). The rotation is
      *        not limited. To move further, release the clutch and press it again. Zero or negative: no limit.
-     * @throws std::invalid_argument if max_translation is NaN or infinite.
+     * @param camera_to_device_rotation r_offset: the rotation, relative to the camera frame, of a frame with the axes
+     *        of the device as seen in the image (unit quaternion). It depends on the camera frame of the simulator
+     *        (see the class description); the default is the one of CoppeliaSim.
+     * @throws std::invalid_argument if max_translation is NaN or infinite, or if camera_to_device_rotation is not a
+     *         unit quaternion (up to kUnitTolerance; it is normalized).
      */
-    explicit HapticPoseMapping(const double& max_translation = 0.0);
+    explicit HapticPoseMapping(
+        const double& max_translation = 0.0,
+        const DQ_robotics::DQ& camera_to_device_rotation = coppeliasim_camera_to_device_rotation());
 
     /**
-     * @brief Returns r_offset, the rotation from a CoppeliaSim camera to the axes of the device.
-     * @return The rotation of 180 deg about the y axis.
+     * @brief Returns r_offset for a CoppeliaSim camera, which looks along +z with +y up.
+     * @return j_, the rotation of 180 deg about the y axis.
      */
-    static DQ_robotics::DQ camera_to_device_rotation();
+    static DQ_robotics::DQ coppeliasim_camera_to_device_rotation();
+
+    /**
+     * @brief Returns r_offset, the rotation set in the constructor.
+     * @return The rotation (unit quaternion).
+     */
+    DQ_robotics::DQ get_camera_to_device_rotation() const;
 
     /**
      * @brief Latches the poses at the press of the clutch.
