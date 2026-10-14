@@ -30,7 +30,7 @@
 #include <limits>
 #include <stdexcept>
 #include <gtest/gtest.h>
-#include <haptic_navigation/dq_validation.hpp>
+#include <haptic_tools_core/dq_validation.hpp>
 
 using namespace haptic_tools;
 using namespace DQ_robotics;

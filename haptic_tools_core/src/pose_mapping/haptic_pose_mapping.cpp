@@ -26,8 +26,8 @@
  * @brief Implementation of HapticPoseMapping.
  */
 
-#include <haptic_navigation/haptic_pose_mapping.hpp>
-#include <haptic_navigation/dq_validation.hpp>
+#include <haptic_tools_core/pose_mapping/haptic_pose_mapping.hpp>
+#include <haptic_tools_core/dq_validation.hpp>
 #include <cmath>
 #include <stdexcept>
 #include <string>

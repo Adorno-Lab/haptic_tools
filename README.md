@@ -5,7 +5,8 @@ ROS 2 tools for teleoperation with a haptic device (e.g. the Touch X) of `sas_op
 
 | Package | |
 |---|---|
-| [haptic_navigation](haptic_navigation/README.md) | The navigation mode of Aldhafeeri et al. (TAROS 2025): the twist of a command frame (an end effector, or a mobile base) and the restoring force on the device, behind a safety layer (`HapticNavigationStrategy`, `HapticNavigationSafety`, `haptic_navigation_node`). Also `HapticPoseMapping` (not from the paper; an open-source implementation of teleoperation features available in the non-commercial SmartArmStack packages): the desired pose of an end effector set with the pose of the device and its clutch, as seen from a reference camera. |
+| [haptic_tools_core](haptic_tools_core/README.md) | The C++ libraries, without ROS. `navigation/`: the navigation mode of Aldhafeeri et al. (TAROS 2025), the twist of a command frame (an end effector, or a mobile base) and the restoring force on the device, behind a safety layer (`HapticNavigationStrategy`, `HapticNavigationSafety`). `pose_mapping/`: `HapticPoseMapping` (not from the paper; an open-source implementation of teleoperation features available in the non-commercial SmartArmStack packages), the desired pose of an end effector set with the pose of the device and its clutch, as seen from a reference camera. |
+| [haptic_navigation](haptic_navigation/README.md) | `haptic_navigation_node`: the ROS 2 node of the navigation. |
 | [haptic_simulator](haptic_simulator) | A GUI that simulates the device: it publishes the same messages as the UDP receiver of the real device, and shows the force received. |
 | [haptic_tools_msgs](haptic_tools_msgs) | Messages (`HapticNavigationStatus`). |
 
@@ -30,7 +31,7 @@ cd ~/ros2_ws/src
 git clone https://github.com/Adorno-Lab/haptic_tools.git
 cd ~/ros2_ws
 colcon build --packages-up-to haptic_navigation haptic_simulator
-colcon test --packages-select haptic_navigation && colcon test-result --verbose
+colcon test --packages-select haptic_tools_core && colcon test-result --verbose
 ```
 
 ## Try it without a device
@@ -44,7 +45,8 @@ ros2 topic pub --once /haptic_navigation/set/enabled sas_msgs/msg/Bool "{data: t
 ros2 topic echo /haptic_navigation/get/status
 ```
 
-See [haptic_navigation/README.md](haptic_navigation/README.md) for the equations, the parameters, and the topics.
+See [haptic_tools_core](haptic_tools_core/README.md) for the equations and the parameters, and
+[haptic_navigation](haptic_navigation/README.md) for the topics of the node.
 
 ## License
 

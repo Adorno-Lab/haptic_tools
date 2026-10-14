@@ -26,7 +26,7 @@
  * @brief Implementation of the checks of dq_validation.hpp.
  */
 
-#include <haptic_navigation/dq_validation.hpp>
+#include <haptic_tools_core/dq_validation.hpp>
 #include <cmath>
 #include <stdexcept>
 

@@ -26,8 +26,8 @@
  * @brief Implementation of HapticNavigationStrategy.
  */
 
-#include <haptic_navigation/haptic_navigation_strategy.hpp>
-#include <haptic_navigation/dq_validation.hpp>
+#include <haptic_tools_core/navigation/haptic_navigation_strategy.hpp>
+#include <haptic_tools_core/dq_validation.hpp>
 #include <cmath>
 #include <stdexcept>
 #include <string>

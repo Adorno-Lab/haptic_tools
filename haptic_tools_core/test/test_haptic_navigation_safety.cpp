@@ -29,7 +29,7 @@
 #include <limits>
 #include <stdexcept>
 #include <gtest/gtest.h>
-#include <haptic_navigation/haptic_navigation_safety.hpp>
+#include <haptic_tools_core/navigation/haptic_navigation_safety.hpp>
 
 using haptic_tools::HapticNavigationSafety;
 using haptic_tools::HapticNavigationSafetyConfiguration;

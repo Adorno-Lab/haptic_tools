@@ -38,8 +38,8 @@
 #include <sas_msgs/msg/information_from_master.hpp>
 #include <sas_msgs/msg/information_to_master.hpp>
 #include <haptic_tools_msgs/msg/haptic_navigation_status.hpp>
-#include <haptic_navigation/haptic_navigation_safety.hpp>
-#include <haptic_navigation/haptic_navigation_strategy.hpp>
+#include <haptic_tools_core/navigation/haptic_navigation_safety.hpp>
+#include <haptic_tools_core/navigation/haptic_navigation_strategy.hpp>
 
 namespace haptic_tools
 {

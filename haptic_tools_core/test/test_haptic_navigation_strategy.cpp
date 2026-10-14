@@ -32,7 +32,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <gtest/gtest.h>
-#include <haptic_navigation/haptic_navigation_strategy.hpp>
+#include <haptic_tools_core/navigation/haptic_navigation_strategy.hpp>
 
 using haptic_tools::HapticNavigationStrategy;
 using haptic_tools::HapticNavigationStrategyConfiguration;

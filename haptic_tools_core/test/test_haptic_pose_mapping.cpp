@@ -31,7 +31,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <gtest/gtest.h>
-#include <haptic_navigation/haptic_pose_mapping.hpp>
+#include <haptic_tools_core/pose_mapping/haptic_pose_mapping.hpp>
 
 using haptic_tools::HapticPoseMapping;
 using namespace DQ_robotics;
