@@ -36,6 +36,9 @@ namespace haptic_tools
  * @brief Sets the desired pose of an end effector with the pose of a haptic device, as seen from a reference
  *        camera. It does not use ROS.
  *
+ * @note Not from the paper: the pose mapping is not part of Aldhafeeri et al. (TAROS 2025). It is an open-source
+ *       implementation of teleoperation features available in the non-commercial SmartArmStack (SAS) packages.
+ *
  * @details While the clutch is pressed, the motion of the device since the press moves the desired pose: moving the
  * stylus to the right moves the end effector to the right in the image of the camera. The user handles the clutch:
  * call engage() at the press, desired_pose() while it is pressed, and disengage() at the release.

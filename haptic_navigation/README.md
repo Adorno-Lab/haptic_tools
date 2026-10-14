@@ -7,7 +7,8 @@ Navigation with a haptic device (e.g. Touch X). It implements the navigation mod
 > pp. 11–24, Springer, 2026. [doi:10.1007/978-3-032-01486-3_2](https://doi.org/10.1007/978-3-032-01486-3_2)
 
 as implemented in `semi_automatic_strategy_teleop` (project-clerice). The equation numbers below are those of the
-paper.
+paper. The package also has a pose mapping (`HapticPoseMapping`, see [Pose mapping](#pose-mapping-hapticposemapping)),
+which is not from the paper.
 
 The strategy (`HapticNavigationStrategy`) gives the twist of a **command frame** $\mathcal{F}_E$ and the force to
 render on the device. It is a C++ library that does not use ROS. $\mathcal{F}_E$ is the frame whose motion is
@@ -174,6 +175,9 @@ ros2 topic echo /haptic_navigation/get/status
 ```
 
 ## Pose mapping (`HapticPoseMapping`)
+
+> **Not from the paper.** The pose mapping is not part of Aldhafeeri et al. (TAROS 2025): it is an open-source
+> implementation of teleoperation features available in the non-commercial SmartArmStack (SAS) packages.
 
 The library also has `HapticPoseMapping` ([haptic_pose_mapping.hpp](include/haptic_navigation/haptic_pose_mapping.hpp),
 without ROS): it sets the **desired pose** of an end effector (position and orientation) with the pose of the device
