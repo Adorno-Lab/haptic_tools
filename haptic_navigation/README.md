@@ -179,8 +179,7 @@ ros2 topic echo /haptic_navigation/get/status
 
 The library also has `HapticPoseMapping` ([haptic_pose_mapping.hpp](include/haptic_navigation/haptic_pose_mapping.hpp),
 without ROS): it sets the **desired pose** of an end effector (position and orientation) with the pose of the device
-and its clutch, as seen from a reference camera. It is used by the lever tasks of the G1 (`g1_lever_demo`,
-`xd_source: haptic`): pressing the clutch moves `xd` with the Touch X, and releasing it puts `xd` at the palm.
+and its clutch, as seen from a reference camera.
 
 The device frame $`\mathcal{F}_H`$ has $`x`$ to the right, $`y`$ up, and $`z`$ towards the user. A CoppeliaSim camera looks
 along its $`+z`$ axis with $`+y`$ up (its $`+x`$ points to the left of the image), so the camera rotated by
