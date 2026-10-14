@@ -186,43 +186,6 @@ along its $`+z`$ axis with $`+y`$ up (its $`+x`$ points to the left of the image
 $`\boldsymbol{r}_{\text{off}}`$, 180° about $`y`$, has the axes of $`\mathcal{F}_H`$ as seen by the user in front of the
 image.
 
-At the press of the clutch, with $`\boldsymbol{\underline{x}}_{h1}`$ the pose of the device, $`\boldsymbol{\underline{x}}_{e1}`$ the
-pose of the end effector, $`\boldsymbol{r}_{c1}`$ the rotation of the camera, and $`s`$ the motion scaling, everything is
-latched:
-
-```math
-\boldsymbol{r}_{\text{ref}} = \boldsymbol{r}_{c1}\boldsymbol{r}_{\text{off}}, \qquad
-\boldsymbol{\underline{x}}_{\text{ref}} = \boldsymbol{r}_{\text{ref}} + \tfrac{1}{2}\varepsilon\,\boldsymbol{t}_{e1}\boldsymbol{r}_{\text{ref}},
-```
-
-a frame at the end effector with the axes of the device as seen in the image. While the clutch is pressed, with
-$`\boldsymbol{\underline{x}}_h = \boldsymbol{r}_h + \frac{1}{2}\varepsilon\,\boldsymbol{p}_h\boldsymbol{r}_h`$ the pose of the device:
-
-```math
-\boldsymbol{r}_\Delta = \boldsymbol{r}_h\boldsymbol{r}_{h1}^*, \qquad
-\boldsymbol{p}_\Delta = s\,(\boldsymbol{p}_h - \boldsymbol{p}_{h1}), \qquad
-\boldsymbol{\underline{x}}_\Delta = \boldsymbol{r}_\Delta + \tfrac{1}{2}\varepsilon\,\boldsymbol{p}_\Delta\boldsymbol{r}_\Delta,
-```
-
-```math
-\boldsymbol{\underline{x}}_d = \boldsymbol{\underline{x}}_{\text{ref}}\,\boldsymbol{\underline{x}}_\Delta\,
-\boldsymbol{\underline{x}}_{\text{ref}}^*\,\boldsymbol{\underline{x}}_{e1},
-```
-
-that is, $`\boldsymbol{t}_d = \boldsymbol{t}_{e1} + \mathrm{Ad}(\boldsymbol{r}_{\text{ref}})\,\boldsymbol{p}_\Delta`$ and
-$`\boldsymbol{r}_d = (\boldsymbol{r}_{\text{ref}}\boldsymbol{r}_\Delta\boldsymbol{r}_{\text{ref}}^*)\,\boldsymbol{r}_{e1}`$:
-the motion of the device since the press, applied to the end effector in the frame of the camera, rotating about the
-end effector. Compared with the formula of `semi_automatic_strategy_teleop/haptic_interface`:
-
-- **Position control.** The pose of the end effector is latched at the press. The original placed
-  $`\boldsymbol{\underline{x}}_{\text{ref}}`$ at the *current* end effector in every cycle, so $`\boldsymbol{t}_d`$ stayed a constant offset ahead of the
-  hand, which kept moving while the stylus was held still (rate control).
-- **Increments in the device frame.** $`\boldsymbol{r}_h\boldsymbol{r}_{h1}^*`$ and $`\boldsymbol{p}_h - \boldsymbol{p}_{h1}`$, not
-  $`\boldsymbol{\underline{x}}_{h1}^*\boldsymbol{\underline{x}}_h`$ (the motion in the frame of the stylus at the press): moving the stylus to the right
-  moves the end effector to the right in the image, however the stylus is held.
-- **The camera and the scaling are latched too**, so moving the camera (e.g. the main view with the mouse) or
-  changing the scaling has no effect until the next press.
-
 Optionally, $`\|\boldsymbol{p}_\Delta\|`$ is limited (`max_translation`). The class does not handle the clutch: its user
 calls `engage()` at the press, `desired_pose()` while it is pressed, and `disengage()` at the release. The tests are in
 [test/test_haptic_pose_mapping.cpp](test/test_haptic_pose_mapping.cpp).
