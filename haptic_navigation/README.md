@@ -14,7 +14,7 @@ The strategy (`HapticNavigationStrategy`) gives the twist of a **command frame**
 render on the device. It is a C++ library that does not use ROS. $`\mathcal{F}_E`$ is the frame whose motion is
 commanded:
 
-- **An end effector** (`planar_joint: false`, as in the paper): it moves in any direction, and the full twist
+- **An end effector** (`planar_joint: false`): it moves in any direction, and the full twist
   is used.
 - **A holonomic mobile base** (`planar_joint: true`, e.g. the Unitree G1): only $`[v_x, v_y, \omega_z]`$ are used.
 
