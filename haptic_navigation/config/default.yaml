@@ -1,0 +1,34 @@
+# Parameters of haptic_navigation_node. All are mandatory. The doubles must be written with a decimal point.
+# The strategy is the navigation mode of Aldhafeeri et al. (TAROS 2025); the numerical defaults are those of
+# semi_automatic_strategy_teleop (project-clerice). Copy this file for each robot, and set the parameters that
+# depend on the device and on the robot (device_to_command_frame_rotation, rotation_axis, planar_joint).
+/**:
+  ros__parameters:
+    # Device: the label in sas_operator_side_receiver.
+    interface_name: "m0_0"
+    # Topics of the node: <topic_prefix>/set/enabled, <topic_prefix>/get/target_twist, <topic_prefix>/get/status.
+    topic_prefix: "haptic_navigation"
+    thread_sampling_time_sec: 0.004
+    # frame_id of the twist: the command frame F_E (an end effector, or the base of a mobile robot).
+    twist_frame_id: "command_frame"
+    # Index of theta (Eq. (8), and the sign of w^E of Eq. (11)) in joint_values of the device; negative counts from the end (-1: the last).
+    theta_index: -1
+    # Before a message on <topic_prefix>/set/enabled.
+    start_enabled: false
+
+    # Strategy.
+    # true: F_E is moved by a planar joint (e.g. a holonomic mobile base), only [vx, vy, wz]. false: any direction.
+    planar_joint: false
+    # r_H^E in p_d^E of Eq. (9), as a unit quaternion [w, x, y, z]. Determined by inspection.
+    device_to_command_frame_rotation: [1.0, 0.0, 0.0, 0.0]
+    dead_zone_radius: 0.04      # r in Eq. (8) and in p_d^E of Eq. (9), before the motion scaling (m)
+    stiffness: 10.0             # k_r in Eq. (7) (N/m)
+    rotation_threshold: 1.2     # theta_limit in Eq. (8) (rad)
+    yaw_rate: 0.2               # phi_dot_d in w^E of Eq. (11) (rad/s)
+    # n_d^E in w^E of Eq. (11), in F_E, as [x, y, z] (read as the unit pure quaternion x*i + y*j + z*k). With planar_joint,
+    # [0, 0, 1] or [0, 0, -1].
+    rotation_axis: [0.0, 0.0, -1.0]
+
+    # Safety (not part of the strategy).
+    data_timeout: 0.1           # the device data is valid while its last message is younger than this (s)
+    max_force: 1.8              # maximum norm of the force sent to the device (N)

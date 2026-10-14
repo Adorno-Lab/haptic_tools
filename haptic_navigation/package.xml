@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>haptic_navigation</name>
+  <version>0.0.0</version>
+  <description>Navigation with a haptic device: the navigation mode of Aldhafeeri et al. (TAROS 2025), with a safety layer, for devices of sas_operator_side_receiver.</description>
+  <maintainer email="juanjose.quirozomana@manchester.ac.uk">Juan Jose Quiroz Omana</maintainer>
+  <license>LGPL</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>eigen</depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sas_core</depend>
+  <depend>sas_common</depend>
+  <depend>sas_msgs</depend>
+  <depend>haptic_tools_msgs</depend>
+
+  <!-- The UDP receiver of the launch file (optional), and the simulator of the device. -->
+  <exec_depend>sas_operator_side_receiver</exec_depend>
+
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

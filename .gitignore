@@ -1,0 +1,12 @@
+# Editor and IDE settings
+.vscode/
+.qtcreator/
+CMakeLists.txt.user*
+
+# Build outputs (colcon and CMake)
+build/
+install/
+log/
+
+# Python
+__pycache__/
