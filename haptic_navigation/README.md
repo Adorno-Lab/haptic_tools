@@ -186,6 +186,3 @@ along its $`+z`$ axis with $`+y`$ up (its $`+x`$ points to the left of the image
 $`\boldsymbol{r}_{\text{off}}`$, 180° about $`y`$, has the axes of $`\mathcal{F}_H`$ as seen by the user in front of the
 image.
 
-Optionally, $`\|\boldsymbol{p}_\Delta\|`$ is limited (`max_translation`). The class does not handle the clutch: its user
-calls `engage()` at the press, `desired_pose()` while it is pressed, and `disengage()` at the release. The tests are in
-[test/test_haptic_pose_mapping.cpp](test/test_haptic_pose_mapping.cpp).
