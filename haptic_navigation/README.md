@@ -105,21 +105,9 @@ stylus offset).
 | `yaw_rate` | $`\dot{\phi}_d`$ (rad/s), in $`\boldsymbol{\omega}_{W,E}^E`$ of Eq. (11) | 0.2 |
 | `rotation_axis` | $`\boldsymbol{n}_d^E`$ (unit pure quaternion, in $`\mathcal{F}_E`$), in $`\boldsymbol{\omega}_{W,E}^E`$ of Eq. (11) | $`\hat{k}`$ |
 
-The numerical defaults are those of `semi_automatic_strategy_teleop`. `device_to_command_frame_rotation` and
-`rotation_axis` depend on the device and on the robot, and must be determined by inspection (in
-`semi_automatic_strategy_teleop`, the end effector rotates about its $`\hat{\imath}`$ axis). In the parameters of
-`haptic_navigation_node`, they are written as `[w, x, y, z]` and `[x, y, z]`.
+The default values of `device_to_command_frame_rotation` and `rotation_axis` depend on the device and on the robot, 
+and must be determined by inspection. In the parameters of `haptic_navigation_node`, they are written as `[w, x, y, z]` and `[x, y, z]`.
 
-### Unit quaternions and tolerances
-
-`is_unit()` of DQ Robotics compares with `DQ_threshold` (1e-12), which only values computed in double precision
-meet: a quaternion written with 8 decimals in a YAML file (error 2e-9), sent in single precision (2e-8), or printed
-with 6 decimals (3e-7) fails it. The rotations, axes, and poses given to the haptic tools are therefore checked by
-[dq_validation.hpp](include/haptic_navigation/dq_validation.hpp) (`to_unit_quaternion()`, `to_unit_pure_quaternion()`,
-`to_unit_dual_quaternion()`) with the tolerance `kUnitTolerance` (1e-3), and normalized: they are unit up to machine
-precision inside. A larger error, e.g. `[0, 0.7, -0.7, 0]` (2e-2), is a mistake, and it is rejected. Vectors built
-from their components (the position of the stylus, the force) must be pure exactly (`is_finite_pure_quaternion()`,
-which also rejects NaN: `is_pure_quaternion()` of DQ Robotics accepts it).
 
 ## Safety
 
@@ -129,7 +117,7 @@ of these hold; otherwise, the twist and the force are zero:
 
 - the navigation is enabled (by the supervisor of the robot, on `<prefix>/set/enabled`);
 - the device data is valid: received, younger than `data_timeout`, finite, and with a positive motion scaling;
-- the clutch is pressed, as a deadman (as in `semi_automatic_strategy_teleop`);
+- the clutch is pressed, as a deadman;
 - the clutch was released since the navigation was enabled or the data became valid, so that the robot does not
   start moving while the clutch is already pressed with the stylus outside the dead zone.
 
