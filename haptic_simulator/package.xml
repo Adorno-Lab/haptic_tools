@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>haptic_simulator</name>
+  <version>0.0.0</version>
+  <description>Simulator of a haptic device of sas_operator_side_receiver (e.g. the Touch X): a GUI with the position and the joints of the stylus, the clutch, and the buttons, which publishes sas_msgs/InformationFromMaster and shows the force received.</description>
+  <maintainer email="juanjose.quirozomana@manchester.ac.uk">Juan Jose Quiroz Omana</maintainer>
+  <license>LGPL</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sas_msgs</depend>
+  <depend>eigen</depend>
+  <build_depend>qt6-base-dev</build_depend>
+  <exec_depend>libqt6widgets6</exec_depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
