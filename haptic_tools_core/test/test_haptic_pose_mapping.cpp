@@ -28,8 +28,10 @@
 
 // Tests of the HapticPoseMapping: the desired pose of an end effector set with the pose of a haptic device.
 
+#include <array>
 #include <cmath>
 #include <stdexcept>
+#include <vector>
 #include <gtest/gtest.h>
 #include <haptic_tools_core/pose_mapping/haptic_pose_mapping.hpp>
 
@@ -137,17 +139,17 @@ TEST(HapticPoseMapping, TranslationDoesNotDependOnHowTheStylusIsHeld)
     // The increments are in the device frame: the same displacement of the stylus gives the same displacement of
     // the end effector, whatever the orientation of the stylus at the press.
     const DQ p_delta = point(0.02, 0.0, 0.0);
-    DQ offsets[2];
-    const DQ stylus[2] = {DQ(1), normalize(rotation(i_, M_PI/4.0)*rotation(j_, 0.6))};
-    for (int n = 0; n < 2; n++)
+    std::array<DQ, 2> offsets;
+    const std::array<DQ, 2> stylus{DQ(1), normalize(rotation(i_, M_PI/4.0)*rotation(j_, 0.6))};
+    for (std::size_t n = 0; n < stylus.size(); n++)
     {
         HapticPoseMapping mapping;
-        const DQ pressed = pose(stylus[n], kDevice.translation());
+        const DQ pressed = pose(stylus.at(n), kDevice.translation());
         mapping.engage(pressed, kEndEffector, kCamera, 1.0);
-        const DQ moved = pose(stylus[n], kDevice.translation() + p_delta);
-        offsets[n] = mapping.desired_pose(moved).translation() - kEndEffector.translation();
+        const DQ moved = pose(stylus.at(n), kDevice.translation() + p_delta);
+        offsets.at(n) = mapping.desired_pose(moved).translation() - kEndEffector.translation();
     }
-    expect_same_point(offsets[0], offsets[1]);
+    expect_same_point(offsets.at(0), offsets.at(1));
 }
 
 TEST(HapticPoseMapping, RotationAboutTheEndEffector)
@@ -211,7 +213,7 @@ TEST(HapticPoseMapping, CameraConventionsOfOtherSimulators)
     // the stylus to the right (+x of the device), up (+y), and towards the user (+z) moves the end effector to the
     // right in the image, up, and towards the camera.
     struct Convention { const char* name; DQ r_offset; DQ right; DQ up; DQ towards_the_camera; };
-    const Convention conventions[] = {
+    const std::vector<Convention> conventions{
         {"CoppeliaSim (looks along +z, +y up)", j_, -1.0*i_, j_, -1.0*k_},
         {"ROS optical (looks along +z, +y down)", i_, i_, -1.0*j_, -1.0*k_},
         {"ROS body (looks along +x, z up)", 0.5*(1.0 + i_ - j_ - k_), -1.0*j_, k_, -1.0*i_},
@@ -222,13 +224,13 @@ TEST(HapticPoseMapping, CameraConventionsOfOtherSimulators)
         SCOPED_TRACE(c.name);
         HapticPoseMapping mapping(0.0, c.r_offset);
         expect_same_pose(mapping.get_camera_to_device_rotation(), c.r_offset);
-        const DQ device_motion[3] = {point(d, 0, 0), point(0, d, 0), point(0, 0, d)};
-        const DQ expected[3] = {d*c.right, d*c.up, d*c.towards_the_camera};
-        for (int n = 0; n < 3; n++)
+        const std::array<DQ, 3> device_motion{point(d, 0, 0), point(0, d, 0), point(0, 0, d)};
+        const std::array<DQ, 3> expected{d*c.right, d*c.up, d*c.towards_the_camera};
+        for (std::size_t n = 0; n < device_motion.size(); n++)
         {
             mapping.engage(kDevice, kEndEffector, DQ(1), 1.0);
-            const DQ moved = pose(kDevice.rotation(), kDevice.translation() + device_motion[n]);
-            expect_same_point(mapping.desired_pose(moved).translation() - kEndEffector.translation(), expected[n]);
+            const DQ moved = pose(kDevice.rotation(), kDevice.translation() + device_motion.at(n));
+            expect_same_point(mapping.desired_pose(moved).translation() - kEndEffector.translation(), expected.at(n));
         }
     }
 }
