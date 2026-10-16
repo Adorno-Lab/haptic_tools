@@ -9,6 +9,7 @@ ROS 2 tools for teleoperation with a haptic device (e.g. the Touch X) of `sas_op
 | [haptic_navigation](haptic_navigation/README.md) | `haptic_navigation_node`: the ROS 2 node of the navigation. |
 | [haptic_simulator](haptic_simulator) | A GUI that simulates the device: it publishes the same messages as the UDP receiver of the real device, and shows the force received. |
 | [haptic_tools_msgs](haptic_tools_msgs) | Messages (`HapticNavigationStatus`). |
+| [examples/](examples/README.md) | `haptic_navigation_example` and `haptic_pose_mapping_example`, with the CoppeliaSim scene [scenes/haptic_scene.ttt](scenes/haptic_scene.ttt). |
 
 > B. Aldhafeeri, J. Carrasco, and B. V. Adorno, "A New Semi-Automatic Strategy for Teleoperating Mobile
 > Manipulators Using a Haptic Device," in *Towards Autonomous Robotic Systems (TAROS 2025)*, LNAI 16045,

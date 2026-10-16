@@ -123,11 +123,14 @@ private:
     void _set_value(Axis& axis, const double& value);
     /// @brief Builds the widgets of the window.
     void _build_ui();
-    /// @brief Returns the position of the stylus, in the device frame (m, pure quaternion).
+    /// @brief Returns the position of the stylus.
+    /// @return The position, in the device frame (m, pure quaternion).
     DQ_robotics::DQ _position() const;
-    /// @brief Sets the position of the stylus (m, pure quaternion), each axis limited to translation_range.
+    /// @brief Sets the position of the stylus, each axis limited to translation_range.
+    /// @param position The position, in the device frame (m, pure quaternion).
     void _set_position(const DQ_robotics::DQ& position);
-    /// @brief Returns the orientation of the stylus, rx(joint 4)*ry(joint 5)*rz(joint 6) (unit quaternion).
+    /// @brief Returns the orientation of the stylus.
+    /// @return rx(joint 4)*ry(joint 5)*rz(joint 6) (unit quaternion).
     DQ_robotics::DQ _orientation() const;
     /// @brief Moves the stylus and its joints back to zero.
     void _centre();
