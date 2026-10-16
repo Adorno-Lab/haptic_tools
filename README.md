@@ -9,7 +9,7 @@ ROS 2 tools for teleoperation with a haptic device (e.g. the Touch X) of `sas_op
 | [haptic_navigation](haptic_navigation/README.md) | `haptic_navigation_node`: the ROS 2 node of the navigation. |
 | [haptic_simulator](haptic_simulator) | A GUI that simulates the device: it publishes the same messages as the UDP receiver of the real device, and shows the force received. |
 | [haptic_tools_msgs](haptic_tools_msgs) | Messages (`HapticNavigationStatus`). |
-| [examples/](examples/README.md) | `haptic_navigation_example` and `haptic_pose_mapping_example`, with the CoppeliaSim scene [scenes/haptic_scene.ttt](scenes/haptic_scene.ttt). |
+| [examples/](examples/README.md) | `haptic_navigation_example`, with the CoppeliaSim scene [scenes/haptic_scene.ttt](scenes/haptic_scene.ttt). |
 
 > B. Aldhafeeri, J. Carrasco, and B. V. Adorno, "A New Semi-Automatic Strategy for Teleoperating Mobile
 > Manipulators Using a Haptic Device," in *Towards Autonomous Robotic Systems (TAROS 2025)*, LNAI 16045,
@@ -25,15 +25,15 @@ open-source implementation of teleoperation features available in the non-commer
 - ROS 2 Jazzy.
 - [DQ Robotics](https://dqrobotics.github.io/) for C++ (`libdqrobotics`) and Eigen 3.
 - The non-commercial packages of [SmartArmStack (SAS)](https://smartarmstack.github.io/): `sas_core`, `sas_common`,
-  `sas_msgs`, `sas_conversions` (for `haptic_pose_mapping_example`), and `sas_operator_side_receiver` (the UDP
-  receiver of the real device, declared by `haptic_navigation`; not needed with `haptic_simulator`).
+  `sas_msgs`, and `sas_operator_side_receiver` (the UDP receiver of the real device, declared by `haptic_navigation`;
+  not needed with `haptic_simulator`).
 - Qt 6 (`qt6-base-dev`), for `haptic_simulator` and the GUI of `haptic_navigation_example`.
 
-**To run the examples in simulation:**
+**To run the example in simulation:**
 
 - CoppeliaSim 4.7 (the scene [scenes/haptic_scene.ttt](scenes/haptic_scene.ttt) was saved with 4.7.0 rev4), with
   the Python interface to ROS 2 (`rclpy`, used by the script of the base of the scene) and `sas_robot_driver_coppeliasim`
-  of SAS (used by the `sas_object_script` of the frames `x`, `xd`, and `DefaultCamera`).
+  of SAS (used by the `sas_object_script` of the frames of the scene).
 - A haptic device: `haptic_simulator` (no hardware needed), or the Touch X (below).
 
 **To use the real haptic device (the Touch X):**
