@@ -18,10 +18,31 @@ ROS 2 tools for teleoperation with a haptic device (e.g. the Touch X) of `sas_op
 The paper covers the navigation strategy only. The pose mapping (`HapticPoseMapping`) is not part of it: it is an
 open-source implementation of teleoperation features available in the non-commercial SmartArmStack (SAS) packages.
 
-## Dependencies
+## Requirements
 
-ROS 2 (Jazzy), Eigen, DQ Robotics, and SmartArmStack (`sas_core`, `sas_common`, `sas_msgs`; and
-`sas_operator_side_receiver` for the real device). `haptic_simulator` needs Qt 6.
+**To build and run the packages** (tested on Ubuntu 24.04):
+
+- ROS 2 Jazzy.
+- [DQ Robotics](https://dqrobotics.github.io/) for C++ (`libdqrobotics`) and Eigen 3.
+- The non-commercial packages of [SmartArmStack (SAS)](https://smartarmstack.github.io/): `sas_core`, `sas_common`,
+  `sas_msgs`, and `sas_conversions` (for `haptic_pose_mapping_example`).
+- Qt 6 (`qt6-base-dev`), for `haptic_simulator` and the GUI of `haptic_navigation_example`.
+
+**To run the examples in simulation:**
+
+- CoppeliaSim 4.7 (the scene [scenes/haptic_scene.ttt](scenes/haptic_scene.ttt) was saved with 4.7.0 rev4), with
+  the Python interface to ROS 2 (`rclpy`, used by the script of the base of the scene) and `sas_robot_driver_coppeliasim`
+  of SAS (used by the `sas_object_script` of the frames `x`, `xd`, and `DefaultCamera`).
+- A haptic device: `haptic_simulator` (no hardware needed), or the Touch X (below).
+
+**To use the real haptic device (the Touch X):**
+
+- A Windows computer with the Touch X connected, its drivers, and the SAS program of the operator side that sends
+  the data of the device over UDP.
+- `sas_operator_side_receiver` of SAS on the Linux computer: it receives the data of the device and publishes it on
+  ROS 2 (`udp_receiver_launch.py` of `haptic_navigation`, or `device:=udp` in the examples). Both computers must be
+  on the same network; the receiver binds to `patient_side_ips` (default `192.168.8.100`), with the ports
+  `patient_side_ports` (`2222`) and `operator_side_ports` (`2223`).
 
 ## Build
 
