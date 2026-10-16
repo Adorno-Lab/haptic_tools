@@ -71,6 +71,16 @@ ros2 topic echo /haptic_navigation/get/status
 See [haptic_tools_core](haptic_tools_core/README.md) for the equations and the parameters, and
 [haptic_navigation](haptic_navigation/README.md) for the topics of the node.
 
+## Docker
+
+[devel/](devel/README.md) has the images and a compose file to run the haptic navigation example with the scene,
+`haptic_simulator` or the Touch X, without installing the requirements:
+
+```shell
+cd devel/examples/haptic_navigation_example
+docker compose up --build
+```
+
 ## License
 
 [LGPL-2.1](LICENSE).
