@@ -1,7 +1,6 @@
 # haptic_tools_core
 
-The haptic tools without ROS: C++ libraries based on DQ Robotics (rotations are unit quaternions, vectors are pure
-quaternions). The ROS 2 node of the navigation is in [haptic_navigation](../haptic_navigation/README.md).
+The haptic tools without ROS: C++ libraries based on DQ Robotics. The ROS 2 node of the navigation is in [haptic_navigation](../haptic_navigation/README.md).
 
 | Folder | Content |
 |---|---|
