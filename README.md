@@ -76,9 +76,17 @@ See [haptic_tools_core](haptic_tools_core/README.md) for the equations and the p
 [devel/](devel/README.md) has the images and a compose file to run the haptic navigation example with the scene,
 `haptic_simulator` or the Touch X, without installing the requirements:
 
+### Haptic Simulator
+
 ```shell
 cd devel/examples/haptic_navigation_example
 docker compose up --build
+```
+### Real Touch X
+
+```shell
+cd devel/examples/haptic_navigation_example
+docker compose --profile touch_x up --build  
 ```
 
 ## License
