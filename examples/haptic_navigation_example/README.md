@@ -10,7 +10,7 @@ computes the twist of the base and the restoring force, publishes the twist, and
 |---|---|---|
 | `/sas_operator_side_receiver/m0_0/get/information_from_master` | `sas_msgs/InformationFromMaster` | subscribed: the device |
 | `/sas_operator_side_receiver/m0_0/set/information_to_master` | `sas_msgs/InformationToMaster` | the force on the device |
-| `/sas_b1/b1_1/set/holonomic_target_twist` | `geometry_msgs/TwistStamped` | the twist of the base ($v_x$, $v_y$, $\omega_z$, in the base frame), for the script `holonomic_cmd` of the scene |
+| `/sas_b1/b1_1/set/holonomic_target_twist` | `geometry_msgs/TwistStamped` | the twist of the base (vx, vy, ωz, in the base frame), for the script `holonomic_cmd` of the scene |
 | `/haptic_navigation_example/get/status` | `haptic_tools_msgs/HapticNavigationStatus` | the dead zone, the stylus, its angle, and the submode, for the GUI |
 
 ```shell
@@ -21,8 +21,8 @@ ros2 launch haptic_navigation_example haptic_navigation_example_launch.py device
 The launch file also starts `haptic_navigation_example_gui` (`gui:=false` to skip it), a basic GUI
 (`NavigationView::paintEvent()`, `src/navigation_view.cpp`) that shows the current mode: a top view of the base with
 the dead zone (dashed circle) and the stylus (a dot: green in translation, orange in rotation, blue when stopped in
-the dead zone, grey when the clutch is released), and a bar of the stylus angle $\theta$, with the rotation zones
-beyond $\pm\theta_{\text{limit}}$ in orange.
+the dead zone, grey when the clutch is released), and a bar of the stylus angle θ, with the rotation zones
+beyond ±θ_limit in orange.
 
 Press the clutch (the space bar in `haptic_simulator`, which starts with a motion scaling of 10), and:
 

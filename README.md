@@ -1,5 +1,7 @@
 # haptic_tools
 
+[![Docs](https://img.shields.io/badge/docs-GitHub_Pages-green)](https://adorno-lab.github.io/haptic_tools/)
+
 ROS 2 tools for teleoperation with a haptic device (e.g. the Touch X) of `sas_operator_side_receiver`
 (SmartArmStack). The strategies are C++ libraries that do not use ROS, with ROS 2 nodes around them.
 

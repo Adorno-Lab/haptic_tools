@@ -4,8 +4,8 @@ The haptic tools without ROS: C++ libraries based on DQ Robotics. The ROS 2 node
 
 | Folder | Content |
 |---|---|
-| [navigation/](include/haptic_tools_core/navigation) | `HapticNavigationStrategy` and `HapticNavigationSafety`: the navigation mode of Aldhafeeri et al. (TAROS 2025), and its safety layer. See [Navigation](#navigation). |
-| [pose_mapping/](include/haptic_tools_core/pose_mapping) | `HapticPoseMapping`: the desired pose of an end effector set with the pose of the device and its clutch. Not from the paper. See [Pose mapping](#pose-mapping). |
+| [navigation/](include/haptic_tools_core/navigation) | `HapticNavigationStrategy` and `HapticNavigationSafety`: the navigation mode of Aldhafeeri et al. (TAROS 2025), and its safety layer. See the section Navigation below. |
+| [pose_mapping/](include/haptic_tools_core/pose_mapping) | `HapticPoseMapping`: the desired pose of an end effector set with the pose of the device and its clutch. Not from the paper. See the section Pose mapping below. |
 | [dq_validation.hpp](include/haptic_tools_core/dq_validation.hpp) | The checks of the unit quaternions, unit dual quaternions, and pure quaternions given to the libraries. |
 
 Use it from another package:
