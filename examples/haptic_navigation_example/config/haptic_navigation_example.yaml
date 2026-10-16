@@ -14,7 +14,7 @@
     # forward, and to the right moves it to the right.
     device_to_command_frame_rotation: [0.5, 0.5, -0.5, -0.5]
     # n_d^E: the base turns about +z (to the left) when the angle of the stylus is positive.
-    rotation_axis: [0.0, 0.0, 1.0]
+    rotation_axis: [0.0, 0.0, -1.0]
     dead_zone_radius: 0.04      # m, before the motion scaling of the device
     stiffness: 10.0             # N/m, the restoring force
     rotation_threshold: 1.2     # rad, the angle of the stylus that starts the rotation
