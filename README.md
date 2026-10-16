@@ -25,7 +25,8 @@ open-source implementation of teleoperation features available in the non-commer
 - ROS 2 Jazzy.
 - [DQ Robotics](https://dqrobotics.github.io/) for C++ (`libdqrobotics`) and Eigen 3.
 - The non-commercial packages of [SmartArmStack (SAS)](https://smartarmstack.github.io/): `sas_core`, `sas_common`,
-  `sas_msgs`, and `sas_conversions` (for `haptic_pose_mapping_example`).
+  `sas_msgs`, `sas_conversions` (for `haptic_pose_mapping_example`), and `sas_operator_side_receiver` (the UDP
+  receiver of the real device, declared by `haptic_navigation`; not needed with `haptic_simulator`).
 - Qt 6 (`qt6-base-dev`), for `haptic_simulator` and the GUI of `haptic_navigation_example`.
 
 **To run the examples in simulation:**
