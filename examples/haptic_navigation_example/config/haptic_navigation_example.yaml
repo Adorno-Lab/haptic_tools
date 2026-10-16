@@ -1,0 +1,25 @@
+# Parameters of haptic_navigation_example_node. All are mandatory. The doubles must be written with a decimal point.
+/**:
+  ros__parameters:
+    # The device: its label in sas_operator_side_receiver (also the label of haptic_simulator).
+    interface_name: "m0_0"
+    # The base of scenes/haptic_scene.ttt: its script (holonomic_cmd) subscribes to this topic.
+    twist_topic: "/sas_b1/b1_1/set/holonomic_target_twist"
+    # The status of the navigation (the dead zone, the stylus, theta, and the submode), for haptic_navigation_example_gui.
+    status_topic: "/haptic_navigation_example/get/status"
+    thread_sampling_time_sec: 0.004
+
+    # r_H^E: the device frame (x to the right, y up, z towards the user) relative to the base frame (x forward, y to
+    # the left, z up), as a unit quaternion [w, x, y, z]: pushing the stylus away from the user moves the base
+    # forward, and to the right moves it to the right.
+    device_to_command_frame_rotation: [0.5, 0.5, -0.5, -0.5]
+    # n_d^E: the base turns about +z (to the left) when the angle of the stylus is positive.
+    rotation_axis: [0.0, 0.0, 1.0]
+    dead_zone_radius: 0.04      # m, before the motion scaling of the device
+    stiffness: 10.0             # N/m, the restoring force
+    rotation_threshold: 1.2     # rad, the angle of the stylus that starts the rotation
+    yaw_rate: 0.2               # rad/s
+
+    # Safety.
+    data_timeout: 0.1           # s: older device data stops the base
+    max_force: 1.5              # N
