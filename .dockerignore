@@ -1,0 +1,7 @@
+# Not needed by the images of devel/ (they copy the packages only).
+.git
+**/build
+**/install
+**/log
+**/__pycache__
+**/*.user

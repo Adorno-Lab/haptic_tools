@@ -1,0 +1,110 @@
+# The haptic navigation example (examples/haptic_navigation_example) with the scene scenes/haptic_scene.ttt: the haptic
+# device drives the holonomic base of the scene, by publishing its twist.
+#   coppeliasim:  the scene (its script holonomic_cmd drives the base with the twist on
+#                 /sas_b1/b1_1/set/holonomic_target_twist).
+#   navigation:   haptic_navigation_example_node: the twist of the base and the force on the device.
+#   gui:          haptic_navigation_example_gui: the dead zone, the stylus, its angle, and the current mode.
+# and one source of the haptic device, chosen with a profile (both publish the same topics: never run both):
+#   haptic_simulator (profile haptic_simulator, the default, set in .env): the simulator of the haptic device
+#                 (haptic_simulator), when the Touch X is not available. Its motion scaling starts at 10. Press the
+#                 clutch with the space bar.
+#   udp_receiver (profile touch_x): the real Touch X. The UDP receiver of sas_operator_side_receiver publishes the data of
+#                 the Touch X, sent by the Windows computer, and sends the force back. It binds to 192.168.8.100, ports
+#                 2222 and 2223 (the defaults of udp_receiver_launch.py of haptic_navigation): this computer must have
+#                 that address, on the network of the Windows computer.
+# All talk only through ROS 2 (ROS_DOMAIN_ID=77, set in the images). Do not run other nodes of the same device (e.g.
+# another UDP receiver, or haptic_navigation_node) at the same time, on the same ROS_DOMAIN_ID.
+#
+# From this folder (xhost +local:root if the X server refuses the connection), then start the simulation in CoppeliaSim:
+#   docker compose up --build                                  # with haptic_simulator (profile from .env)
+#   docker compose --profile touch_x up --build                # with the real Touch X instead (the flag replaces the
+#                                                              # profile of .env)
+services:
+  coppeliasim:
+    image: haptic_tools_jazzy_coppeliasim
+    build:
+      context: ../../..
+      dockerfile: devel/haptic_tools_jazzy_coppeliasim/Dockerfile
+    environment:
+      DISPLAY: $DISPLAY  # x server related
+      XAUTHORITY: /root/.Xauthority  # x server related
+      QT_X11_NO_MITSHM: 1  # x server related
+    privileged: true # Needed for some gpu configurations.
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # x server related
+      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority:ro # x server related
+      # Mounted, not copied, so that the scenes saved from CoppeliaSim land in the repository.
+      - ../../../scenes:/app/scenes
+    network_mode: "host"
+    ipc: "host"
+    stdin_open: true
+    tty: true
+    command: /bin/bash -c "
+            $${COPPELIASIM_PATH}/coppeliaSim.sh /app/scenes/haptic_scene.ttt"
+
+  navigation:
+    image: haptic_tools_jazzy
+    build:
+      context: ../../..
+      dockerfile: devel/haptic_tools_jazzy/Dockerfile
+    network_mode: "host"
+    ipc: "host"
+    stdin_open: true
+    tty: true
+    stop_grace_period: 10s # the node sends a zero twist and a zero force when it stops.
+    command: /bin/bash -c "
+            ros2 launch haptic_navigation_example haptic_navigation_example_launch.py device:=none gui:=false"
+
+  gui:
+    image: haptic_tools_jazzy
+    build:
+      context: ../../..
+      dockerfile: devel/haptic_tools_jazzy/Dockerfile
+    environment:
+      DISPLAY: $DISPLAY  # x server related
+      XAUTHORITY: /root/.Xauthority  # x server related
+      QT_X11_NO_MITSHM: 1  # x server related
+    privileged: true # Needed for some gpu configurations.
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # x server related
+      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority:ro # x server related
+    network_mode: "host"
+    ipc: "host"
+    stdin_open: true
+    tty: true
+    command: /bin/bash -c "
+            ros2 run haptic_navigation_example haptic_navigation_example_gui"
+
+  haptic_simulator:
+    profiles: ["haptic_simulator"]
+    image: haptic_tools_jazzy
+    build:
+      context: ../../..
+      dockerfile: devel/haptic_tools_jazzy/Dockerfile
+    environment:
+      DISPLAY: $DISPLAY  # x server related
+      XAUTHORITY: /root/.Xauthority  # x server related
+      QT_X11_NO_MITSHM: 1  # x server related
+    privileged: true # Needed for some gpu configurations.
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix # x server related
+      - ${XAUTHORITY:-~/.Xauthority}:/root/.Xauthority:ro # x server related
+    network_mode: "host"
+    ipc: "host"
+    stdin_open: true
+    tty: true
+    command: /bin/bash -c "
+            ros2 launch haptic_simulator haptic_simulator_launch.py motion_scaling:=10.0"
+
+  udp_receiver:
+    profiles: ["touch_x"]
+    image: haptic_tools_jazzy
+    build:
+      context: ../../..
+      dockerfile: devel/haptic_tools_jazzy/Dockerfile
+    network_mode: "host"
+    ipc: "host"
+    stdin_open: true
+    tty: true
+    command: /bin/bash -c "
+            ros2 launch haptic_navigation udp_receiver_launch.py"
