@@ -18,7 +18,12 @@ ROS 2 tools for teleoperation with a haptic device (e.g. the Touch X) of `sas_op
 > pp. 11–24, Springer, 2026. [doi:10.1007/978-3-032-01486-3_2](https://doi.org/10.1007/978-3-032-01486-3_2)
 
 The paper covers the navigation strategy only. The pose mapping (`HapticPoseMapping`) is not part of it: it is an
-open-source implementation of teleoperation features available in the non-commercial SmartArmStack (SAS) packages.
+open-source implementation of teleoperation features available in the non-commercial SmartArmStack (SAS) packages. See 
+
+> M. M. Marinho, J. J. Quiroz-Omaña and K. Harada, "A Multiarm Robotic Platform for Scientific Exploration: Its Design, Digital Twins, and Validation," in IEEE Robotics & Automation Magazine, vol. 31, no. 4, pp. 10-20, Dec. 2024, [doi: 10.1109/MRA.2023.3336472](https://ieeexplore.ieee.org/document/10399868).
+keywords: {Service robots;Manipulators;Robot kinematics;Artificial intelligence;Surgery;Medical robotics;Organoids;Digital twins;Biological systems;Artificial intelligence;Teleoperators},
+
+
 
 ## Requirements
 
