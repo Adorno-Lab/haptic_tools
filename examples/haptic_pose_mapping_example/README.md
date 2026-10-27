@@ -10,6 +10,9 @@ main view (`DefaultCamera`). `haptic_pose_mapping_example_node` (`HapticPoseMapp
   starting from the pose of `x` at the press: moving the stylus to the right moves `xd` to the right in the main view,
   and rotating the stylus rotates `xd` about itself. The poses of `x`, the device, and the camera are latched at the
   press, so moving the main view with the mouse has no effect until the next press;
+- the translation of the device is scaled by the motion scaling sent with the device data (`motion_scaling` of
+  `sas_msgs/InformationFromMaster`: set in the master, or the `motion_scaling` argument of `haptic_simulator`), also
+  latched at the press. If it is not positive, `motion_scaling` of the configuration is used;
 - when the clutch is released (or the device data is older than 0.1 s), `xd` is set to `x`.
 
 The example does not move `x`. With a robot, a kinematic controller moves the end effector towards `xd`, and `x` is
@@ -28,6 +31,6 @@ ros2 launch haptic_pose_mapping_example haptic_pose_mapping_example_launch.py de
 ```
 
 The parameters are in [config/haptic_pose_mapping_example.yaml](config/haptic_pose_mapping_example.yaml):
-`motion_scaling` (of the translation of the device), `max_translation` (of `xd` in a press), and
+`motion_scaling` (used when the device data has no valid motion scaling), `max_translation` (of `xd` in a press), and
 `camera_to_device_rotation` (`[0, 0, 1, 0]` for a CoppeliaSim camera; see the other conventions in
 [haptic_tools_core](../../haptic_tools_core/README.md#pose-mapping)).

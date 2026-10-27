@@ -101,9 +101,17 @@ void HapticPoseMappingExample::_step()
     const bool device_valid = _device_pose(device_pose);
     if (device_valid && device_.clutch)
     {
-        // At the press, the poses are latched: the device, x, and the camera.
+        // At the press, the poses are latched: the device, x, and the camera. So is the motion scaling: the one set in
+        // the master (or haptic_simulator), or motion_scaling of the configuration if the master sends no valid one.
         if (!mapping_.is_engaged())
-            mapping_.engage(device_pose, x, camera_client_->get_pose(), configuration_.motion_scaling);
+        {
+            const bool from_master = std::isfinite(device_.motion_scaling) && device_.motion_scaling > 0.0;
+            const double motion_scaling = from_master ? device_.motion_scaling : configuration_.motion_scaling;
+            mapping_.engage(device_pose, x, camera_client_->get_pose(), motion_scaling);
+            RCLCPP_INFO_STREAM(node_->get_logger(), "::Clutch pressed: motion scaling " << motion_scaling
+                               << (from_master ? " (from the master)." : " (motion_scaling: the master sent "
+                                   + std::to_string(device_.motion_scaling) + ")."));
+        }
         xd = mapping_.desired_pose(device_pose);
         _log("xd follows the device (as seen from the camera)");
     }

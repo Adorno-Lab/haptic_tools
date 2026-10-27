@@ -29,8 +29,8 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'motion_scaling',
             default_value='1.0',
-            description='Motion scaling of haptic_simulator (device:=simulator; the example uses motion_scaling of its '
-                        'YAML instead).'
+            description='Motion scaling of haptic_simulator (device:=simulator), sent with the device data and used by '
+                        'the example at each press of the clutch.'
         ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(

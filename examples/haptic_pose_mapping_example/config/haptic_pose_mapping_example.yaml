@@ -9,8 +9,8 @@
     camera_prefix: "sas_robot_driver_coppeliasim/object/DefaultCamera"
     thread_sampling_time_sec: 0.01
 
-    # Scaling of the translation of the device, and the maximum displacement of xd in a press of the clutch (m; 0.0:
-    # no limit).
+    # Scaling of the translation of the device, used only when the master (or haptic_simulator) does not send a valid
+    # one, and the maximum displacement of xd in a press of the clutch (m; 0.0: no limit).
     motion_scaling: 1.0
     max_translation: 0.5
     # r_offset of HapticPoseMapping, [w, x, y, z]: [0, 0, 1, 0] (180 deg about y) for a CoppeliaSim camera, which
