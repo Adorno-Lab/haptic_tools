@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>haptic_pose_mapping_example</name>
+  <version>0.0.0</version>
+  <description>Example of the pose mapping (haptic_tools_core): a haptic device sets the pose of the frame xd of scenes/pose_mapping.ttt, as seen from the camera of the main view.</description>
+  <maintainer email="juanjose.quirozomana@manchester.ac.uk">Juan Jose Quiroz Omana</maintainer>
+  <license>LGPL</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>sas_core</depend>
+  <depend>sas_common</depend>
+  <depend>sas_conversions</depend>
+  <depend>sas_msgs</depend>
+  <depend>haptic_tools_core</depend>
+
+  <!-- The device: haptic_simulator, or the UDP receiver of the Touch X (udp_receiver_launch.py of haptic_navigation). -->
+  <exec_depend>haptic_simulator</exec_depend>
+  <exec_depend>haptic_navigation</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
