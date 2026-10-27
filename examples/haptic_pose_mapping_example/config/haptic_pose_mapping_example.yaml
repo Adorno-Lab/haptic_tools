@@ -1,0 +1,19 @@
+# Parameters of haptic_pose_mapping_example_node. All are mandatory. The doubles must be written with a decimal point.
+/**:
+  ros__parameters:
+    # The device: its label in sas_operator_side_receiver (also the label of haptic_simulator).
+    interface_name: "m0_0"
+    # The frames of scenes/pose_mapping.ttt (published by their sas_object_script).
+    x_prefix: "sas_robot_driver_coppeliasim/object/x"
+    xd_prefix: "sas_robot_driver_coppeliasim/object/xd"
+    camera_prefix: "sas_robot_driver_coppeliasim/object/DefaultCamera"
+    thread_sampling_time_sec: 0.01
+
+    # Scaling of the translation of the device, used only when the master (or haptic_simulator) does not send a valid
+    # one, and the maximum displacement of xd in a press of the clutch (m; 0.0: no limit).
+    motion_scaling: 1.0
+    max_translation: 0.5
+    # r_offset of HapticPoseMapping, [w, x, y, z]: [0, 0, 1, 0] (180 deg about y) for a CoppeliaSim camera, which
+    # looks along +z with +y up.
+    camera_to_device_rotation: [0.0, 0.0, 1.0, 0.0]
+    data_timeout: 0.1           # s: older device data counts as a release of the clutch
