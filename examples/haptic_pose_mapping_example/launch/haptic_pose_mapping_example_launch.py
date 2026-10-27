@@ -6,7 +6,8 @@ then
     ros2 launch haptic_pose_mapping_example haptic_pose_mapping_example_launch.py device:=udp     # with the Touch X
 
 device:=simulator starts haptic_simulator (press the clutch with the space bar). device:=udp starts the UDP receiver
-of the Touch X (udp_receiver_launch.py of haptic_navigation; see its arguments).
+of the Touch X (udp_receiver_launch.py of haptic_navigation; see its arguments). device:=none starts neither (the
+device is started apart, e.g. in another container).
 """
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -22,8 +23,8 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'device',
             default_value='simulator',
-            choices=['simulator', 'udp'],
-            description='simulator: haptic_simulator. udp: the UDP receiver of the Touch X.'
+            choices=['simulator', 'udp', 'none'],
+            description='simulator: haptic_simulator. udp: the UDP receiver of the Touch X. none: started apart.'
         ),
         DeclareLaunchArgument(
             'motion_scaling',
