@@ -262,3 +262,80 @@ TEST(HapticPoseMapping, InvalidArguments)
     mapping.engage((1.0 + 1e-5)*kDevice, kEndEffector, kCamera, 1.0);
     expect_same_pose(mapping.desired_pose(kDevice), kEndEffector);
 }
+
+TEST(HapticPoseMapping, WithoutRotationScalingTheDesiredPoseIsUnchanged)
+{
+    // s_r = 1 (the default) gives exactly x_d = x_ref*x_delta*x_ref^* * x_e1, with its sign, also when r_delta has a
+    // negative real part.
+    const double s = 2.0;
+    const DQ moved = -1.0*pose(normalize(rotation(j_, 0.8)*kDevice.rotation()), kDevice.translation() + point(0.01, 0.02, -0.01));
+    const DQ r_delta = normalize(moved.rotation()*kDevice.rotation().conj());
+    ASSERT_LT(r_delta.q(0), 0.0);
+
+    const DQ r_ref = normalize(kCamera.rotation()*HapticPoseMapping::coppeliasim_camera_to_device_rotation());
+    const DQ x_ref = r_ref + 0.5*E_*kEndEffector.translation()*r_ref;
+    const DQ p_delta = s*(moved.translation() - kDevice.translation());
+    const DQ x_delta = r_delta + 0.5*E_*p_delta*r_delta;
+    const DQ expected = normalize(x_ref*x_delta*x_ref.conj()*kEndEffector);
+
+    HapticPoseMapping by_default;
+    by_default.engage(kDevice, kEndEffector, kCamera, s);
+    HapticPoseMapping explicit_one;
+    explicit_one.engage(kDevice, kEndEffector, kCamera, s, 1.0);
+    EXPECT_LT((by_default.desired_pose(moved).vec8() - expected.vec8()).norm(), kTolerance);
+    EXPECT_TRUE(by_default.desired_pose(moved).vec8() == explicit_one.desired_pose(moved).vec8());
+}
+
+TEST(HapticPoseMapping, RotationScalingScalesTheAngleAndKeepsTheAxis)
+{
+    // r_d = Ad(r_ref)(r_delta^s_r)*r_e1: 90 deg of the stylus with s_r = 0.5 turns the end effector 45 deg.
+    const DQ axis = normalize(i_ + k_);
+    const DQ moved = pose(normalize(rotation(axis, M_PI/2.0)*kDevice.rotation()), kDevice.translation());
+    const DQ r_ref = normalize(kCamera.rotation()*HapticPoseMapping::coppeliasim_camera_to_device_rotation());
+    HapticPoseMapping mapping;
+    mapping.engage(kDevice, kEndEffector, kCamera, 1.0, 0.5);
+    expect_same_pose(mapping.desired_pose(moved).rotation(),
+                     normalize(Ad(r_ref, rotation(axis, M_PI/4.0))*kEndEffector.rotation()));
+    expect_same_point(mapping.desired_pose(moved).translation(), kEndEffector.translation());
+}
+
+TEST(HapticPoseMapping, RotationScalingUsesTheShortestArc)
+{
+    // The same pose of the stylus with the opposite sign gives the same x_d, and 270 deg about an axis is scaled as
+    // 90 deg about the opposite axis.
+    const DQ axis = normalize(i_ - j_ + k_);
+    const DQ r_ref = normalize(kCamera.rotation()*HapticPoseMapping::coppeliasim_camera_to_device_rotation());
+    HapticPoseMapping mapping;
+    mapping.engage(kDevice, kEndEffector, kCamera, 1.0, 0.5);
+
+    const DQ moved = pose(normalize(rotation(axis, M_PI/2.0)*kDevice.rotation()), kDevice.translation());
+    expect_same_pose(mapping.desired_pose(-1.0*moved), mapping.desired_pose(moved));
+
+    const DQ turned = pose(normalize(rotation(axis, 1.5*M_PI)*kDevice.rotation()), kDevice.translation());
+    expect_same_pose(mapping.desired_pose(turned).rotation(),
+                     normalize(Ad(r_ref, rotation(-1.0*axis, M_PI/4.0))*kEndEffector.rotation()));
+}
+
+TEST(HapticPoseMapping, ZeroRotationScalingLocksTheOrientation)
+{
+    // The orientation stays at the one of the end effector at the press, and the translation does not depend on s_r.
+    const double s = 2.0;
+    const DQ moved = pose(normalize(rotation(k_, 0.7)*rotation(i_, -0.3)*kDevice.rotation()),
+                          kDevice.translation() + point(0.01, -0.02, 0.03));
+    HapticPoseMapping locked;
+    locked.engage(kDevice, kEndEffector, kCamera, s, 0.0);
+    HapticPoseMapping unscaled;
+    unscaled.engage(kDevice, kEndEffector, kCamera, s);
+    expect_same_pose(locked.desired_pose(moved).rotation(), kEndEffector.rotation());
+    expect_same_point(locked.desired_pose(moved).translation(), unscaled.desired_pose(moved).translation());
+}
+
+TEST(HapticPoseMapping, InvalidRotationScaling)
+{
+    HapticPoseMapping mapping;
+    EXPECT_THROW(mapping.engage(kDevice, kEndEffector, kCamera, 1.0, -0.1), std::invalid_argument);
+    EXPECT_THROW(mapping.engage(kDevice, kEndEffector, kCamera, 1.0, std::nan("")), std::invalid_argument);
+    EXPECT_THROW(mapping.engage(kDevice, kEndEffector, kCamera, 1.0, INFINITY), std::invalid_argument);
+    EXPECT_FALSE(mapping.is_engaged());
+    EXPECT_NO_THROW(mapping.engage(kDevice, kEndEffector, kCamera, 1.0, 0.0));
+}

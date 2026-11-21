@@ -51,6 +51,7 @@ struct HapticPoseMappingExampleConfiguration
     double thread_sampling_time_sec;     ///< Period of the loop (s), e.g. 0.01.
     double motion_scaling;               ///< Scaling of the translation (positive) if the master sends no valid one.
     double max_translation;              ///< Maximum displacement of xd in a press of the clutch (m); zero: no limit.
+    double rotation_scaling;             ///< Scaling of the rotation (non-negative); 1: no scaling.
     DQ_robotics::DQ camera_to_device_rotation;   ///< r_offset of HapticPoseMapping (unit quaternion): j_ for CoppeliaSim.
     double data_timeout;                 ///< The device data is valid while younger than this (s).
 };

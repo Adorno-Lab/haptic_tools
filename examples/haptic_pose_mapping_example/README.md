@@ -21,6 +21,7 @@ ros2 launch haptic_pose_mapping_example haptic_pose_mapping_example_launch.py de
 ```
 
 The parameters are in [config/haptic_pose_mapping_example.yaml](config/haptic_pose_mapping_example.yaml):
-`motion_scaling` (of the translation of the device), `max_translation` (of `xd` in a press), and
+`motion_scaling` (of the translation of the device), `rotation_scaling` (of the rotation of the device; 1: none),
+`max_translation` (of `xd` in a press), and
 `camera_to_device_rotation` (`[0, 0, 1, 0]` for a CoppeliaSim camera; see the other conventions in
 [haptic_tools_core](../../haptic_tools_core/README.md#pose-mapping)).

@@ -69,17 +69,21 @@ DQ HapticPoseMapping::get_camera_to_device_rotation() const
 }
 
 void HapticPoseMapping::engage(const DQ& device_pose, const DQ& end_effector_pose, const DQ& camera_pose,
-                               const double& motion_scaling)
+                               const double& motion_scaling, const double& rotation_scaling)
 {
     if (!std::isfinite(motion_scaling) || motion_scaling <= 0.0)
         throw std::invalid_argument("HapticPoseMapping: the motion scaling must be positive, but it is "
                                     + std::to_string(motion_scaling) + ".");
+    if (!std::isfinite(rotation_scaling) || rotation_scaling < 0.0)
+        throw std::invalid_argument("HapticPoseMapping: the rotation scaling must be non-negative, but it is "
+                                    + std::to_string(rotation_scaling) + ".");
     x_h1_ = _unit(device_pose, "the pose of the device");
     x_e1_ = _unit(end_effector_pose, "the pose of the end effector");
     const DQ r_ref = normalize(_unit(camera_pose, "the pose of the camera").rotation()*camera_to_device_rotation_);
     const DQ t_e1 = x_e1_.translation();
     x_ref_ = r_ref + 0.5*E_*t_e1*r_ref;
     motion_scaling_ = motion_scaling;
+    rotation_scaling_ = rotation_scaling;
     engaged_ = true;
 }
 
@@ -100,7 +104,14 @@ DQ HapticPoseMapping::desired_pose(const DQ& device_pose) const
     const DQ x_h = _unit(device_pose, "the pose of the device");
 
     // The increments since the press, in the device frame.
-    const DQ r_delta = normalize(x_h.rotation()*x_h1_.rotation().conj());
+    DQ r_delta = normalize(x_h.rotation()*x_h1_.rotation().conj());
+    if (rotation_scaling_ != 1.0)
+    {
+        // Scale the angle on the shortest arc and keep the axis and the sign of r_delta. With s_r = 1 this is
+        // skipped, so x_d is exactly the one without rotation scaling (the sign of x_d matters to the users).
+        const double sign = r_delta.q(0) < 0.0 ? -1.0 : 1.0;
+        r_delta = sign*normalize(pow(sign*r_delta, rotation_scaling_));
+    }
     DQ p_delta = motion_scaling_*(x_h.translation() - x_h1_.translation());
     const double norm = p_delta.vec3().norm();
     if (max_translation_ > 0.0 && norm > max_translation_)
