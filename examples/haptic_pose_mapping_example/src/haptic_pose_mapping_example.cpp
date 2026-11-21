@@ -48,6 +48,8 @@ HapticPoseMappingExample::HapticPoseMappingExample(const std::shared_ptr<rclcpp:
 {
     if (!(std::isfinite(configuration_.motion_scaling) && configuration_.motion_scaling > 0.0))
         throw std::invalid_argument("motion_scaling must be positive.");
+    if (!(std::isfinite(configuration_.rotation_scaling) && configuration_.rotation_scaling >= 0.0))
+        throw std::invalid_argument("rotation_scaling must be non-negative.");
     x_client_ = std::make_unique<sas::ObjectClient>(node_, configuration_.x_prefix);
     xd_client_ = std::make_unique<sas::ObjectClient>(node_, configuration_.xd_prefix);
     camera_client_ = std::make_unique<sas::ObjectClient>(node_, configuration_.camera_prefix);
@@ -107,10 +109,12 @@ void HapticPoseMappingExample::_step()
         {
             const bool from_master = std::isfinite(device_.motion_scaling) && device_.motion_scaling > 0.0;
             const double motion_scaling = from_master ? device_.motion_scaling : configuration_.motion_scaling;
-            mapping_.engage(device_pose, x, camera_client_->get_pose(), motion_scaling);
+            mapping_.engage(device_pose, x, camera_client_->get_pose(), motion_scaling,
+                            configuration_.rotation_scaling);
             RCLCPP_INFO_STREAM(node_->get_logger(), "::Clutch pressed: motion scaling " << motion_scaling
-                               << (from_master ? " (from the master)." : " (motion_scaling: the master sent "
-                                   + std::to_string(device_.motion_scaling) + ")."));
+                               << (from_master ? " (from the master)" : " (motion_scaling: the master sent "
+                                   + std::to_string(device_.motion_scaling) + ")")
+                               << ", rotation scaling " << configuration_.rotation_scaling << ".");
         }
         xd = mapping_.desired_pose(device_pose);
         _log("xd follows the device (as seen from the camera)");

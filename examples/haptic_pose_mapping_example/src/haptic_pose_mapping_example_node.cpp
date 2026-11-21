@@ -50,7 +50,8 @@ void sig_handler(int)
  * @brief Entry point of haptic_pose_mapping_example_node.
  *
  * @details Parameters (all mandatory; see config/haptic_pose_mapping_example.yaml): interface_name, x_prefix,
- * xd_prefix, camera_prefix (string), thread_sampling_time_sec, motion_scaling, max_translation, data_timeout
+ * xd_prefix, camera_prefix (string), thread_sampling_time_sec, motion_scaling, max_translation,
+ * rotation_scaling, data_timeout
  * (double), and camera_to_device_rotation (unit quaternion [w, x, y, z]).
  *
  * @param argc Number of arguments.
@@ -75,6 +76,7 @@ int main(int argc, char** argv)
         sas::get_ros_parameter(node, "thread_sampling_time_sec", configuration.thread_sampling_time_sec);
         sas::get_ros_parameter(node, "motion_scaling", configuration.motion_scaling);
         sas::get_ros_parameter(node, "max_translation", configuration.max_translation);
+        sas::get_ros_parameter(node, "rotation_scaling", configuration.rotation_scaling);
         std::vector<double> r;
         sas::get_ros_parameter(node, "camera_to_device_rotation", r);
         if (r.size() != 4)

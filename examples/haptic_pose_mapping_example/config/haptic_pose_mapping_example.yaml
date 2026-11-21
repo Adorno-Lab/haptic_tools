@@ -13,6 +13,8 @@
     # one, and the maximum displacement of xd in a press of the clutch (m; 0.0: no limit).
     motion_scaling: 1.0
     max_translation: 0.5
+    # Scaling of the rotation of the device (1.0: none; 0.0: the orientation of xd stays at the one of the press).
+    rotation_scaling: 1.0
     # r_offset of HapticPoseMapping, [w, x, y, z]: [0, 0, 1, 0] (180 deg about y) for a CoppeliaSim camera, which
     # looks along +z with +y up.
     camera_to_device_rotation: [0.0, 0.0, 1.0, 0.0]
