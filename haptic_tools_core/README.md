@@ -165,3 +165,10 @@ argument of the constructor (`camera_to_device_rotation`, a unit quaternion):
 | CoppeliaSim: looks along $`+z`$, $`+y`$ up ($`+x`$ to the left of the image) | $`\hat{\jmath}`$, 180° about $`y`$ (the default, `coppeliasim_camera_to_device_rotation()`) |
 | ROS optical frame: looks along $`+z`$, $`+y`$ down ($`+x`$ to the right) | $`\hat{\imath}`$, 180° about $`x`$ |
 | ROS body frame: looks along $`+x`$, $`+y`$ to the left, $`+z`$ up | $`\tfrac{1}{2}(1 + \hat{\imath} - \hat{\jmath} - \hat{k})`$, 120° about $`(\hat{\imath} - \hat{\jmath} - \hat{k})/\sqrt{3}`$ |
+
+**Scaling.** At the press of the clutch, `engage()` latches the motion scaling $`s`$ (of the translation) and the
+rotation scaling $`s_r`$ (of the rotation, `rotation_scaling`, 1 by default). $`s_r`$ scales the angle of the rotation
+of the stylus since the press, about the same axis and on the shortest arc: with $`s_r = 0.5`$, turning the stylus
+90° turns the end effector 45°. With $`s_r = 1`$, the desired pose is exactly the one without rotation scaling; with
+$`s_r = 0`$, the orientation stays at the one of the press. With $`s_r \neq 1`$, turning the stylus more than 180° in
+one press makes the desired pose jump: to turn further, release the clutch and press it again.

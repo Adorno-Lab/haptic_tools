@@ -58,7 +58,7 @@ namespace haptic_tools
    @endverbatim
  *
  * At the press, with x_h1 the pose of the device, x_e1 the pose of the end effector, r_c1 the rotation of the camera,
- * and s the motion scaling:
+ * s the motion scaling, and s_r the rotation scaling:
  * @verbatim
    r_ref = r_c1*r_offset,   x_ref = r_ref + 0.5*E*t_e1*r_ref
    @endverbatim
@@ -69,9 +69,20 @@ namespace haptic_tools
    @endverbatim
  * that is, t_d = t_e1 + Ad(r_ref)*p_delta and r_d = (r_ref*r_delta*r_ref^*)*r_e1.
  *
+ * If s_r != 1, r_delta is replaced, before x_delta, by the same rotation with its angle scaled by s_r, about the same
+ * axis, on the shortest arc, and with the sign of r_delta:
+ * @verbatim
+   r_delta <- sign*(sign*r_delta)^s_r,   sign = 1 if Re(r_delta) >= 0, -1 otherwise
+   @endverbatim
+ * With s_r = 1 (the default) this is skipped, so x_d is exactly the one without rotation scaling. With s_r = 0, the
+ * orientation of x_d stays at the one of the end effector at the press. The translation does not depend on s_r.
+ *
  * Everything is latched at the press, so this is position control: holding the stylus still holds x_d still, and
  * moving the camera or changing the scaling has no effect until the next press. Optionally, ||p_delta|| is limited
  * to max_translation.
+ *
+ * @warning With s_r != 1, turning the stylus more than 180 deg from its orientation at the press makes x_d jump (the
+ * shortest arc changes to the opposite axis). To turn further, release the clutch and press it again.
  */
 class HapticPoseMapping
 {
