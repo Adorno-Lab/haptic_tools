@@ -81,6 +81,7 @@ private:
     DQ_robotics::DQ x_e1_{1};      ///< Pose of the end effector at the press.
     DQ_robotics::DQ x_ref_{1};     ///< Frame with the axes of the camera, at the end effector, at the press.
     double motion_scaling_{1.0};   ///< Motion scaling s, at the press.
+    double rotation_scaling_{1.0}; ///< Rotation scaling s_r, at the press.
     double max_translation_{0.0};  ///< Maximum ||p_delta|| (m); non-positive: no limit.
     DQ_robotics::DQ camera_to_device_rotation_;   ///< r_offset.
 
@@ -121,11 +122,14 @@ public:
      * @param camera_pose Pose of the reference camera, in the same frame as end_effector_pose (unit dual quaternion;
      *        only its rotation is used).
      * @param motion_scaling Motion scaling s (positive, finite).
-     * @throws std::invalid_argument if a pose is not a unit dual quaternion (up to rounding), or if motion_scaling is
-     *         not valid.
+     * @param rotation_scaling Rotation scaling s_r (non-negative, finite): it scales the angle of r_delta and keeps its
+     *        axis. 1 (the default): no scaling. 0: the orientation stays at the one of the end effector at the press.
+     * @throws std::invalid_argument if a pose is not a unit dual quaternion (up to rounding), or if motion_scaling or
+     *         rotation_scaling is not valid.
      */
     void engage(const DQ_robotics::DQ& device_pose, const DQ_robotics::DQ& end_effector_pose,
-                const DQ_robotics::DQ& camera_pose, const double& motion_scaling);
+                const DQ_robotics::DQ& camera_pose, const double& motion_scaling,
+                const double& rotation_scaling = 1.0);
 
     /// @brief Leaves the engaged state (at the release of the clutch).
     void disengage();
